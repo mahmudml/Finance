@@ -1,0 +1,23 @@
+import QuantLib as ql
+import math
+interest_rate = 0.007
+calc_date = ql.Date(26,12,2021)
+DCC = ql.ActualActual()
+Compounded = ql.Compounded
+continuous = ql.Continuous
+T = 1.
+strike = 60
+spot = 50
+volatility = 0.5
+option_type = ql.Option.Call
+yield_curve = ql.FlatForward(calc_date,interest_rate,DCC,Compounded,continuous)
+df = yield_curve.discount(T)
+opt_payoff = ql.PlainVanillaPayoff(option_type, strike)
+std = volatility*math.sqrt(T)
+black = ql.BlackCalculator(opt_payoff, spot, std, df)
+rint("Option Price", black.value())
+print("Delta", black.delta(spot))
+print("Gamma", black.gamma(spot))
+print("Theta", black.theta(spot, T))
+print("Vega", black.vega(T))
+print("Rho", black.rho(T))
